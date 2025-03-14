@@ -20,7 +20,7 @@ def load_model(state_path):
         Load model from the checkpoints
     """
     model = FTFasterRCNN(num_classes=NUM_CLASSES, freeze_backbone=True)
-    checkpoints = torch.load(state_path)
+    checkpoints = torch.load(state_path, map_location=torch.device('cpu'))
     model.load_state_dict(checkpoints["state_dict"])
     model.eval()
     model.to(DEVICE)
@@ -197,7 +197,8 @@ def process_video(model, video_path, output_path=None, score_threshold=0.5, disp
 
 if __name__ == "__main__":
     # Load model
-    model = load_model("../models/final/best_faster_rcnn_checkpoints.pt")
+    model_path = os.path.join(os.path.dirname(__file__), "..", "models", "final", "best_faster_rcnn_checkpoints.pt")
+    model = load_model(model_path)
 
     # Display selection list
     INPUT_PATH = "./inputs/videos/"
